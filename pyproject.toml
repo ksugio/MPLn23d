@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "MPLn23d"
-version = "0.0.2"
+version = "0.0.3"
 description = "Measure features of second phases in microstructures of materilas"
 readme =  {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
@@ -16,6 +16,3 @@ dev = [
     "build",
     "twine"
 ]
-
-[tool.setuptools.packages.find]
-where = ["src"]
