@@ -4,12 +4,20 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "MPLn23d"
-version = "0.0.4"
+version = "0.0.7"
 description = "Measure features of second phases in microstructures of materilas"
 readme =  {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
 authors = [ {name = "Kenjiro Sugio", email = "ksugio@hiroshima-u.ac.jp"} ]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "numpy",
+]
 
 [project.optional-dependencies]
 dev = [
