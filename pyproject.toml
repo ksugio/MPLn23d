@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "numpy"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,6 +10,12 @@ readme =  {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.8"
 license = {file = "LICENSE"}
 authors = [ {name = "Kenjiro Sugio", email = "ksugio@hiroshima-u.ac.jp"} ]
-dependencies = [
-    "numpy",
+
+[project.optional-dependencies]
+dev = [
+    "build",
+    "twine"
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
