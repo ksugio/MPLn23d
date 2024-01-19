@@ -7,7 +7,8 @@ setup(
         Extension(
             name="MPLn23d",
             sources=glob("src/*.c"),
-            include_dirs=[np.get_include()]
+            include_dirs=[np.get_include()],
+            include_package_data=True
         ),
     ]
 )
