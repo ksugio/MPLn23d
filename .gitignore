@@ -173,3 +173,4 @@ $RECYCLE.BIN/
 # setup
 *.egg-info/
 dist/
+.pypirc
