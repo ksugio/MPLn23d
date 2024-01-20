@@ -1,6 +1,12 @@
 # MPLn23d
 Python library to measure the 2-dimensional local number (LN2D) and the 3-dimensional local number (LN3D).
 
+# Install
+
+```
+> pip install MPImfp
+```
+
 # References
 ## class ln2d_new(nsmax)
 + nsmax : maximum number of section
