@@ -4,7 +4,7 @@ Python library to measure the 2-dimensional local number (LN2D) and the 3-dimens
 # Install
 
 ```
-> pip install MPImfp
+> pip install MPLn23d
 ```
 
 # References
