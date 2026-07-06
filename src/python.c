@@ -110,7 +110,8 @@ static PyObject *PyLn3dMeasureGc(MP_Ln3dData *self, PyObject *args, PyObject *kw
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist, &PyArray_Type, &f_obj)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT,
+		NPY_ARRAY_WRITEABLE | NPY_ARRAY_C_CONTIGUOUS | NPY_ARRAY_ALIGNED);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
 		Py_XDECREF(f_arr);
@@ -135,7 +136,8 @@ static PyObject *PyLn3dMeasureRandom(MP_Ln3dData *self, PyObject *args, PyObject
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!i", kwlist, &PyArray_Type, &f_obj, &nsample)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT,
+		NPY_ARRAY_WRITEABLE | NPY_ARRAY_C_CONTIGUOUS | NPY_ARRAY_ALIGNED);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
 		Py_XDECREF(f_arr);
@@ -316,7 +318,8 @@ static PyObject *PyLn2dMeasureGc(MP_Ln2dData *self, PyObject *args, PyObject *kw
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist, &PyArray_Type, &f_obj)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT,
+		NPY_ARRAY_WRITEABLE | NPY_ARRAY_C_CONTIGUOUS | NPY_ARRAY_ALIGNED);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
 		Py_XDECREF(f_arr);
@@ -341,7 +344,8 @@ static PyObject *PyLn2dMeasureRandom(MP_Ln2dData *self, PyObject *args, PyObject
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!i", kwlist, &PyArray_Type, &f_obj, &nsample)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT,
+		NPY_ARRAY_WRITEABLE | NPY_ARRAY_C_CONTIGUOUS | NPY_ARRAY_ALIGNED);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
 		Py_XDECREF(f_arr);
@@ -474,7 +478,8 @@ static PyObject *PyStatCalc(PyObject *self, PyObject *args, PyObject *kwds)
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist, &PyArray_Type, &f_obj)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT,
+		NPY_ARRAY_WRITEABLE | NPY_ARRAY_C_CONTIGUOUS | NPY_ARRAY_ALIGNED);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
 		Py_XDECREF(f_arr);
@@ -514,6 +519,7 @@ PyMODINIT_FUNC PyInit_MPLn23d(void)
 {
 	PyObject *m;
 
+	import_array();
 #ifndef PY3
 	if (PyType_Ready(&PyLn3dNewType) < 0) return;
 	if (PyType_Ready(&PyLn2dNewType) < 0) return;
@@ -524,8 +530,7 @@ PyMODINIT_FUNC PyInit_MPLn23d(void)
 	if (PyType_Ready(&PyLn2dNewType) < 0) return NULL;
 	m = PyModule_Create(&Ln23dModuleDef);
 	if (m == NULL) return NULL;
-#endif
-	import_array();
+#endif	
 	Py_INCREF(&PyLn3dNewType);
 	PyModule_AddObject(m, "ln3d_new", (PyObject *)&PyLn3dNewType);
 	Py_INCREF(&PyLn2dNewType);
