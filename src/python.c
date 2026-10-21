@@ -500,7 +500,7 @@ static PyObject *PyStatCalc(PyObject *self, PyObject *args, PyObject *kwds)
 
 static PyMethodDef MPLn23dPyMethods[] = {
 	{ "stat_calc", (PyCFunction)PyStatCalc, METH_VARARGS | METH_KEYWORDS,
-	"stat_calc(f, rf) : return total number, average, variance and relative frequency" },
+	"stat_calc(f) : return ((total number, average, variance), relative frequency)" },
 	{ NULL }  /* Sentinel */
 };
 
