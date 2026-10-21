@@ -175,3 +175,6 @@ $RECYCLE.BIN/
 *.egg-info/
 dist/
 .pypirc
+# python extension modules
+*.pyd
+wheelhouse/
