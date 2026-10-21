@@ -9,6 +9,79 @@ Python library to measure the 2-dimensional local number (LN2D) and the 3-dimens
 
 Requires Python 3.9 or later and numpy. Prebuilt wheels are available for Windows (x64), macOS (x86_64, arm64) and Linux (x86_64, aarch64).
 
+# Usage
+## Random particles in 3D and their cross sections
+```python
+import numpy as np
+import MPLn23d
+
+# put 1000 particles (radius 0.02) randomly in a unit cube
+ln3d = MPLn23d.ln3d_new(1)
+cid = ln3d.add_cell(1000, 1.0, 1.0, 1.0)
+ln3d.add_gc_random(cid, 1000, 0.0, 0.02)
+
+# measure LN3D
+f3 = np.zeros(100, dtype=np.uint32)
+ln3d.measure_gc(f3)
+(total, ave, var), rf = MPLn23d.stat_calc(f3)
+print("LN3D average =", ave, "variance =", var)
+print("volume fraction =", ln3d.volume_fraction())
+
+# cut the cell into 30 random cross sections and measure LN2D
+ln2d = MPLn23d.ln2d_new(30)
+ln2d.cut_random(30, 1000, ln3d, cid)
+f2 = np.zeros(100, dtype=np.uint32)
+ln2d.measure_gc(f2)
+(total, ave, var), rf = MPLn23d.stat_calc(f2)
+print("LN2D average =", ave, "variance =", var)
+print("area fraction =", ln2d.area_fraction())
+```
+
+## Particles measured in a micrograph
+```python
+import numpy as np
+import MPLn23d
+
+# particles in a 200 x 150 um micrograph, CSV columns: x, y, r
+data = np.loadtxt("particles.csv", delimiter=",", skiprows=1)
+
+ln2d = MPLn23d.ln2d_new(1)
+sid = ln2d.add_sec(len(data), 200.0, 150.0)
+for x, y, r in data:
+    ln2d.add_gc(sid, x, y, r)
+
+f = np.zeros(100, dtype=np.uint32)
+ln2d.measure_gc(f)
+(total, ave, var), rf = MPLn23d.stat_calc(f)
+print("LN2D average =", ave, "variance =", var)
+print("area fraction =", ln2d.area_fraction())
+```
+
+## Uniform and clustered distributions
+```python
+import numpy as np
+import MPLn23d
+
+ln2d = MPLn23d.ln2d_new(1)
+sid = ln2d.add_sec(1000, 1.0, 1.0)
+ln2d.seed = 12345                          # fix the seed for reproducible results
+ln2d.add_gc_random(sid, 300, 0.0, 0.01)    # uniform random
+ln2d.add_gc_random(sid, 300, 0.1, 0.01)    # clustered around the center
+
+f_gc = np.zeros(100, dtype=np.uint32)
+f_rand = np.zeros(100, dtype=np.uint32)
+ln2d.measure_gc(f_gc)                      # around each particle
+ln2d.measure_random(f_rand, 10000)         # around random points
+print("on gc     :", MPLn23d.stat_calc(f_gc)[0])
+print("on random :", MPLn23d.stat_calc(f_rand)[0])
+```
+
+## Notes
++ The local number is counted within a circle (LN2D) or sphere (LN3D) whose radius is determined from the number density of gc.
++ Sections and cells are treated with periodic boundary conditions. Use enough particles so that the counting radius is much smaller than the section/cell size.
++ measure_gc counts the gc itself.
++ Make f large enough; local numbers of len(f) or more are ignored and do not appear in total.
+
 # References
 ## function stat_calc(f)
 calculate statistics of frequency
