@@ -522,6 +522,7 @@ PyMODINIT_FUNC PyInit_MPLn23d(void)
 {
 	PyObject *m;
 
+	import_array();
 #ifndef PY3
 	if (PyType_Ready(&PyLn3dNewType) < 0) return;
 	if (PyType_Ready(&PyLn2dNewType) < 0) return;
@@ -532,8 +533,7 @@ PyMODINIT_FUNC PyInit_MPLn23d(void)
 	if (PyType_Ready(&PyLn2dNewType) < 0) return NULL;
 	m = PyModule_Create(&Ln23dModuleDef);
 	if (m == NULL) return NULL;
-#endif
-	import_array();
+#endif	
 	Py_INCREF(&PyLn3dNewType);
 	PyModule_AddObject(m, "ln3d_new", (PyObject *)&PyLn3dNewType);
 	Py_INCREF(&PyLn2dNewType);
