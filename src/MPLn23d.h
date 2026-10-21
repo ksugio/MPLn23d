@@ -15,7 +15,7 @@ extern "C" {
 #define M_PI 3.14159265358979323846
 #endif
 
-#ifndef _DEBUG
+#ifndef MP_NO_PYTHON
 #ifndef Py_PYTHON_H
 #include <Python.h>
 #endif
@@ -53,7 +53,7 @@ typedef struct MP_Ln2dSection {
 } MP_Ln2dSection;
 
 typedef struct MP_Ln2dData {
-#ifndef _DEBUG
+#ifndef MP_NO_PYTHON
 	PyObject_HEAD
 #endif
 	int nsec;
@@ -83,7 +83,7 @@ typedef struct MP_Ln3dCell {
 } MP_Ln3dCell;
 
 typedef struct MP_Ln3dData {
-#ifndef _DEBUG
+#ifndef MP_NO_PYTHON
 	PyObject_HEAD
 #endif
 	int ncell;

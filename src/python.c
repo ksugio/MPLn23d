@@ -1,5 +1,6 @@
-#ifndef _DEBUG
+#ifndef MP_NO_PYTHON
 
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include "MPLn23d.h"
 #include <numpy/arrayobject.h>
 
@@ -10,9 +11,7 @@
 static void PyLn3dDealloc(MP_Ln3dData* self)
 {
 	MP_Ln3dFree(self);
-#ifndef PY3
-	self->ob_type->tp_free((PyObject*)self);
-#endif
+	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 static PyObject *PyLn3dNew(PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -110,16 +109,19 @@ static PyObject *PyLn3dMeasureGc(MP_Ln3dData *self, PyObject *args, PyObject *kw
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist, &PyArray_Type, &f_obj)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_ARRAY_INOUT_ARRAY2);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
-		Py_XDECREF(f_arr);
+		PyArray_DiscardWritebackIfCopy(f_arr);
+		Py_DECREF(f_arr);
 		PyErr_SetString(PyExc_ValueError, "invalid freq data, ndim must be 1");
 		return NULL;
 	}
 	f_shape = PyArray_DIM(f_arr, 0);
 	f_data = (unsigned int *)PyArray_DATA(f_arr);
 	MP_Ln3dMeasureGc(self, f_shape, f_data);
+	PyArray_ResolveWritebackIfCopy(f_arr);
+	Py_DECREF(f_arr);
 	Py_RETURN_NONE;
 }
 
@@ -135,16 +137,19 @@ static PyObject *PyLn3dMeasureRandom(MP_Ln3dData *self, PyObject *args, PyObject
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!i", kwlist, &PyArray_Type, &f_obj, &nsample)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_ARRAY_INOUT_ARRAY2);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
-		Py_XDECREF(f_arr);
+		PyArray_DiscardWritebackIfCopy(f_arr);
+		Py_DECREF(f_arr);
 		PyErr_SetString(PyExc_ValueError, "invalid freq data, ndim must be 1");
 		return NULL;
 	}
 	f_shape = PyArray_DIM(f_arr, 0);
 	f_data = (unsigned int *)PyArray_DATA(f_arr);
 	MP_Ln3dMeasureRandom(self, f_shape, f_data, nsample);
+	PyArray_ResolveWritebackIfCopy(f_arr);
+	Py_DECREF(f_arr);
 	Py_RETURN_NONE;
 }
 
@@ -170,10 +175,7 @@ static PyMethodDef PyLn3dMethods[] = {
 };
 
 static PyTypeObject PyLn3dNewType = {
-	PyObject_HEAD_INIT(NULL)
-#ifndef PY3
-	0,							/*ob_size*/
-#endif
+	PyVarObject_HEAD_INIT(NULL, 0)
 	"MPLn23d.ln3d_new",			/*tp_name*/
 	sizeof(MP_Ln3dData),		/*tp_basicsize*/
 	0,							/*tp_itemsize*/
@@ -216,9 +218,7 @@ static PyTypeObject PyLn3dNewType = {
 static void PyLn2dDealloc(MP_Ln2dData* self)
 {
 	MP_Ln2dFree(self);
-#ifndef PY3
-	self->ob_type->tp_free((PyObject*)self);
-#endif
+	Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 static PyObject *PyLn2dNew(PyTypeObject *type, PyObject *args, PyObject *kwds)
@@ -316,16 +316,19 @@ static PyObject *PyLn2dMeasureGc(MP_Ln2dData *self, PyObject *args, PyObject *kw
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist, &PyArray_Type, &f_obj)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_ARRAY_INOUT_ARRAY2);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
-		Py_XDECREF(f_arr);
+		PyArray_DiscardWritebackIfCopy(f_arr);
+		Py_DECREF(f_arr);
 		PyErr_SetString(PyExc_ValueError, "invalid freq data, ndim must be 1");
 		return NULL;
 	}
 	f_shape = PyArray_DIM(f_arr, 0);
 	f_data = (unsigned int *)PyArray_DATA(f_arr);
 	MP_Ln2dMeasureGc(self, f_shape, f_data);
+	PyArray_ResolveWritebackIfCopy(f_arr);
+	Py_DECREF(f_arr);
 	Py_RETURN_NONE;
 }
 
@@ -341,16 +344,19 @@ static PyObject *PyLn2dMeasureRandom(MP_Ln2dData *self, PyObject *args, PyObject
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!i", kwlist, &PyArray_Type, &f_obj, &nsample)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_ARRAY_INOUT_ARRAY2);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
-		Py_XDECREF(f_arr);
+		PyArray_DiscardWritebackIfCopy(f_arr);
+		Py_DECREF(f_arr);
 		PyErr_SetString(PyExc_ValueError, "invalid freq data, ndim must be 1");
 		return NULL;
 	}
 	f_shape = PyArray_DIM(f_arr, 0);
 	f_data = (unsigned int *)PyArray_DATA(f_arr);
 	MP_Ln2dMeasureRandom(self, f_shape, f_data, nsample);
+	PyArray_ResolveWritebackIfCopy(f_arr);
+	Py_DECREF(f_arr);
 	Py_RETURN_NONE;
 }
 
@@ -417,10 +423,7 @@ static PyMethodDef PyLn2dMethods[] = {
 };
 
 static PyTypeObject PyLn2dNewType = {
-	PyObject_HEAD_INIT(NULL)
-#ifndef PY3
-	0,							/*ob_size*/
-#endif
+	PyVarObject_HEAD_INIT(NULL, 0)
 	"MPLn23d.ln2d_new",			/*tp_name*/
 	sizeof(MP_Ln2dData),		/*tp_basicsize*/
 	0,							/*tp_itemsize*/
@@ -474,10 +477,10 @@ static PyObject *PyStatCalc(PyObject *self, PyObject *args, PyObject *kwds)
 	if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist, &PyArray_Type, &f_obj)) {
 		return NULL;
 	}
-	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_INOUT_ARRAY);
+	f_arr = (PyArrayObject *)PyArray_FROM_OTF(f_obj, NPY_UINT, NPY_ARRAY_IN_ARRAY);
 	if (f_arr == NULL) return NULL;
 	if (PyArray_NDIM(f_arr) != 1) {
-		Py_XDECREF(f_arr);
+		Py_DECREF(f_arr);
 		PyErr_SetString(PyExc_ValueError, "invalid freq data, ndim must be 1");
 		return NULL;
 	}
@@ -485,9 +488,14 @@ static PyObject *PyStatCalc(PyObject *self, PyObject *args, PyObject *kwds)
 	f_data = (unsigned int *)PyArray_DATA(f_arr);
 	rf_dim[0] = f_shape;
 	rf_obj = PyArray_SimpleNew(1, rf_dim, NPY_FLOAT64);
+	if (rf_obj == NULL) {
+		Py_DECREF(f_arr);
+		return NULL;
+	}
 	rf_data = (double *)PyArray_DATA((PyArrayObject *)rf_obj);
 	total =	MP_StatCalc(f_shape, f_data, rf_data, &ave, &var);
-	return Py_BuildValue("(idd)O", total, ave, var, rf_obj);
+	Py_DECREF(f_arr);
+	return Py_BuildValue("(idd)N", total, ave, var, rf_obj);
 }
 
 static PyMethodDef MPLn23dPyMethods[] = {
@@ -535,4 +543,4 @@ PyMODINIT_FUNC PyInit_MPLn23d(void)
 #endif
 }
 
-#endif /* _DEBUG */
+#endif /* MP_NO_PYTHON */

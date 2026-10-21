@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "numpy"]
+requires = ["setuptools>=77", "numpy>=2.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,13 +7,18 @@ name = "MPLn23d"
 version = "0.0.7"
 description = "Measure features of second phases in microstructures of materilas"
 readme =  {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.8"
-license = {file = "LICENSE"}
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [ {name = "Kenjiro Sugio", email = "ksugio@hiroshima-u.ac.jp"} ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: C",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
 ]
 dependencies = [
     "numpy",
@@ -27,3 +32,12 @@ dev = [
 
 [project.urls]
 "Homepage" = "https://github.com/ksugio/MPLn23d"
+
+[tool.cibuildwheel]
+build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
+skip = "*-win32 *-manylinux_i686 *-musllinux*"
+test-requires = ["numpy"]
+test-command = "python {project}/tests/smoke_test.py"
+
+[tool.cibuildwheel.macos]
+archs = ["x86_64", "arm64"]
